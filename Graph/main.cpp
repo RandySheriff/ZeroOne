@@ -1,5 +1,5 @@
+#include "Graph.h"
 #include <iostream>
-
 using namespace std;
 
 template<class T>
@@ -36,7 +36,42 @@ int BinarySearch(T* addr, size_t sz, const T& key)
 
 int main()
 {
-    int A[] = {0,3,7,9,12,34,56,78};
-    cout << BinarySearch(A, sizeof(A)/sizeof(decltype(A[0])), 78) << endl;
+    /*
+    int A[][3] = {
+                  {0,1,1},
+                  {2,0,2},
+                  {3,3,0}
+                 };
+    */
+
+    int A[][4] = {
+                  {-1, 1, 3, 7},
+                  {-1,-1,-1, 1},
+                  {-1,-1,-1, 5},
+                  {-1,-1,-1,-1}
+                 };
+
+    std::function<bool(const int&)> HasEdge = [] (const int& value) { return value != 0;};
+
+    auto graph = Graph<int>::CreateFromArray((void*)A, sizeof(A)/sizeof(A[0]), A[0][0], HasEdge);
+
+    graph->PrintGraph(-1);
+
+    std::function<bool(const int&, const int&)> IsSmaller = [] (const int& v1, const int& v2) { return v1 < v2;};
+
+    std::cout << graph->FindShortestPathByAStarSearch(0, 3, -1, IsSmaller) << std::endl;
+
+    /*
+    double A[][3] = {{0.0,1.1,1.1},{2.2,0.0,2.2},{3.3,3.3,0.0}};
+
+    std::function<bool(const double&)> HasEdge = [] (const int& value) { return value > 0.0;};
+
+    auto graph = Graph<double>::CreateFromArray((void*)A, sizeof(A)/sizeof(A[0]), A[0][0], HasEdge);
+
+    graph->PrintGraph(0.0);
+    */
+
+    delete graph;
+
     return 0;
 }
